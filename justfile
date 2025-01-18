@@ -7,12 +7,12 @@ restore-env:
   [ -d '.venv' ] || uv sync --all-extras --all-groups
 
 bump-version:
-  uv run cz bump --no-verify
-  uv run pre-commit run -a
+  cz bump --no-verify
+  pre-commit run -a
   git commit --amend --no-edit
 
 cpn-cli:
-  uv run cpn-cli
+  cpn-cli
 
 clean:
   uvx cleanpy@0.5.1 .
