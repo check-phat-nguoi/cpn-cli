@@ -1,0 +1,26 @@
+[project]
+authors = [
+  { name = "KevinNitroG", email = "kevinnitro@duck.com" },
+  { name = "NTGNguyen", email = 'ntgnguyen@duck.com' },
+]
+description = "cpn cli"
+name = "cpn-cli"
+version = "0.1.0.dev1"
+requires-python = ">=3.13"
+dependencies = ["cpn-core[discord,ocr]>=0.0.0.dev0"]
+
+[project.scripts]
+cpn-cli = "cpn_cli:__main__.main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/cpn_cli"]
+
+[tool.uv.sources]
+cpn-core = { git = "https://github.com/check-phat-nguoi/cpn-core/" }
+
+[dependency-groups]
+dev = ["pre-commit>=4.0.1"]
