@@ -5,9 +5,9 @@ authors = [
 ]
 description = "cpn cli"
 name = "cpn-cli"
-version = "0.1.0.dev1"
+version = "0.1.0"
 requires-python = ">=3.13"
-dependencies = ["cpn-core[discord,ocr]>=0.0.0.dev0"]
+dependencies = ["cpn-core[discord,ocr]==0.3.0"]
 
 [project.scripts]
 cpn-cli = "cpn_cli:__main__.main"
@@ -19,8 +19,5 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/cpn_cli"]
 
-[tool.uv.sources]
-cpn-core = { git = "https://github.com/check-phat-nguoi/cpn-core/" }
-
 [dependency-groups]
-dev = ["pre-commit>=4.0.1"]
+dev = ["commitizen>=4.1.0", "git-cliff>=2.7.0", "pre-commit>=4.0.1"]

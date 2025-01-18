@@ -105,7 +105,9 @@ cffi==1.17.1 ; platform_python_implementation != 'CPython' or sys_platform == 'd
     --hash=sha256:e03eab0a8677fa80d646b5ddece1cbeaf556c313dcfac435ba11f107ba117b5d \
     --hash=sha256:f3a2b4222ce6b60e2e8b337bb9596923045681d71e5a082783484d845390938e \
     --hash=sha256:f6a16c31041f09ead72d69f583767292f750d24913dadacf5756b966aacb3f1a
-cpn-core @ git+https://github.com/check-phat-nguoi/cpn-core/@f4b13cc2ef6510095495d10418235a71901d4ae4
+cpn-core==0.3.0 \
+    --hash=sha256:c4d1aadbd9f8db2ca978d35eecff12141b8b037e9e60ad607503a39266a70c35 \
+    --hash=sha256:e9191fa64b81599bce5b5a822c7668f6df5518b66f99ea6078e567317b8c5a34
 discord-py==2.4.0 \
     --hash=sha256:b8af6711c70f7e62160bfbecb55be699b5cb69d007426759ab8ab06b1bd77d1d \
     --hash=sha256:d07cb2a223a185873a1d0ee78b9faa9597e45b3f6186df21a95cec1e9bcdc9a5
