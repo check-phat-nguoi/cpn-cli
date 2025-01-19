@@ -45,10 +45,10 @@ class GetData:
                 plate_info
             )
             if violations is None:
+                logger.info(
+                    f"Plate {plate_info.plate}: Failed to get data with API: {api.value}..."
+                )
                 continue
-            logger.info(
-                f"Plate {plate_info.plate}: Failed to get data with API: {api.value}..."
-            )
             logger.info(
                 f"Plate {plate_info.plate}: Sucessfully got data with API: {api.value}..."
             )
@@ -56,7 +56,7 @@ class GetData:
                 PlateDetail(
                     plate_info=plate_info,
                     violations=tuple(
-                        violation for violation in violations if violation.status
+                        violation for violation in violations if not violation.status
                     )
                     if config.pending_fines_only
                     else violations,

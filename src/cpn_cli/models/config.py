@@ -1,3 +1,5 @@
+from typing import Literal
+
 from cpn_core.models.plate_info import PlateInfo
 from cpn_core.types.api import ApiEnum
 from cpn_core.types.log_level import LogLevelEnum
@@ -31,6 +33,10 @@ class Config(BaseModel):
         description="Sử dụng API từ trang web nào. Mặc định sẽ là list các API như trong schema hiển thị và dừng khi 1 API lấy dữ liệu thành công. Có thể điền giá trị trùng để retry. Hoặc chỉ dùng 1 API",
         default=(ApiEnum.phatnguoi_vn, ApiEnum.checkphatnguoi_vn),
         min_length=1,
+    )
+    time_format: Literal["12", "24"] = Field(
+        description="Định dạng thời gian 12h hoặc 24h",
+        default="24",
     )
     print_console: bool = Field(
         title="In thông tin ra console",

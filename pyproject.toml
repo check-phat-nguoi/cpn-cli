@@ -7,7 +7,7 @@ description = "cpn cli"
 name = "cpn-cli"
 version = "0.2.0"
 requires-python = ">=3.13"
-dependencies = ["cpn-core[discord,ocr]==0.3.0"]
+dependencies = ["cpn-core[discord,ocr]==0.4.0"]
 
 [project.scripts]
 cpn-cli = "cpn_cli:__main__.main"

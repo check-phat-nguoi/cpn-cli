@@ -20,7 +20,9 @@ class PrintConsole:
         print(
             "\n\n---\n\n".join(
                 plate_detail.get_str(
-                    show_less_detail=config.show_less_details, markdown=False
+                    show_less_detail=config.show_less_details,
+                    markdown=False,
+                    time_format=config.time_format,
                 )
                 for plate_detail in self.plate_details
             )

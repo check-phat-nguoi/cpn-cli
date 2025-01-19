@@ -1,5 +1,5 @@
 from asyncio import gather
-from functools import cache, cached_property
+from functools import cache
 from logging import getLogger
 
 from cpn_core.models.plate_detail import PlateDetail
@@ -20,29 +20,13 @@ class Notify:
         self._telegram_engine: TelegramNotificationEngine
         self._discord_engine: DiscordNotificationEngine
 
-    @cached_property
-    def _raw_messages(self) -> tuple[tuple[str, ...], ...]:
-        return tuple(
-            plate_detail.get_strs(
-                show_less_detail=config.show_less_details, markdown=False
-            )
-            for plate_detail in self._plate_details
-        )
-
-    @cached_property
-    def _markdown_messages(self) -> tuple[tuple[str, ...], ...]:
-        return tuple(
-            plate_detail.get_strs(
-                show_less_detail=config.show_less_details, markdown=True
-            )
-            for plate_detail in self._plate_details
-        )
-
     @cache
     def _get_messages_groups(self, markdown: bool) -> tuple[tuple[str, ...], ...]:
         return tuple(
-            plate_detail.get_strs(
-                show_less_detail=config.show_less_details, markdown=markdown
+            plate_detail.get_messages(
+                show_less_detail=config.show_less_details,
+                markdown=markdown,
+                time_format=config.time_format,
             )
             for plate_detail in self._plate_details
         )
