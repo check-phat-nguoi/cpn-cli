@@ -11,7 +11,7 @@ from cpn_cli.models.notifcations.telegram import TelegramNotificationConfig
 
 class Config(BaseModel):
     model_config = ConfigDict(
-        title="Config",
+        title="CPN CLI Config",
         frozen=True,
     )
 

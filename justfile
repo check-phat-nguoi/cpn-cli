@@ -7,8 +7,8 @@ alias p := precommit-run-all
 restore-env:
   [ -d '.venv' ] || uv sync --all-extras --all-groups
 
-run:
-  uv run cpn-cli
+run *args='':
+  uv run cpn-cli {{ args }}
 
 bump-verison:
   uv run cz bump
