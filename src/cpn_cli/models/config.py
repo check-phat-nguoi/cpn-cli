@@ -5,6 +5,7 @@ from cpn_core.types.api import ApiEnum
 from cpn_core.types.log_level import LogLevelEnum
 from pydantic import BaseModel, ConfigDict, Field
 
+from cpn_cli.models.apis_settings import ApisSettings
 from cpn_cli.models.notifcations.discord import DiscordNotificationConfig
 from cpn_cli.models.notifcations.telegram import TelegramNotificationConfig
 
@@ -33,6 +34,9 @@ class Config(BaseModel):
         description="Sử dụng API từ trang web nào. Mặc định sẽ là list các API như trong schema hiển thị và dừng khi 1 API lấy dữ liệu thành công. Có thể điền giá trị trùng để retry. Hoặc chỉ dùng 1 API",
         default=(ApiEnum.phatnguoi_vn, ApiEnum.checkphatnguoi_vn),
         min_length=1,
+    )
+    apis_settings: ApisSettings = Field(
+        default_factory=ApisSettings,
     )
     time_format: Literal["12", "24"] = Field(
         description="Định dạng thời gian 12h hoặc 24h",

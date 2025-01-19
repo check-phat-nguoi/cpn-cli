@@ -72,11 +72,14 @@ class GetData:
             ) as self._checkphatnguoi_engine,
             CsgtGetDataEngine(
                 timeout=config.request_timeout,
+                retry_captcha=config.apis_settings.retry_resolve_captcha,
             ) as self._csgt_engine,
             PhatNguoiGetDataEngine(
                 timeout=config.request_timeout,
             ) as self._phatnguoi_engine,
-            ZMIOGetDataEngine(timeout=config.request_timeout) as self._zmio_engine,
+            ZMIOGetDataEngine(
+                timeout=config.request_timeout,
+            ) as self._zmio_engine,
         ):
             if config.asynchronous:
                 await gather(
