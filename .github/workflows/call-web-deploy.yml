@@ -1,0 +1,14 @@
+name: Call web deploy
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call web deploy
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run --repo ${{ github.repository_owner }}/check-phat-nguoi.github.io deploy.yml
