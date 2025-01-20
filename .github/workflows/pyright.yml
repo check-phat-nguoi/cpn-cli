@@ -24,6 +24,11 @@ jobs:
           cache-dependency-path: |
             pyproject.toml
 
+      - uses: extractions/setup-just@v2
+
+      - name: Install deps
+        run: just restore-env
+
       - uses: jakebailey/pyright-action@v2
         with:
           venv-path: ./ # override pyright config because it's mono repo
