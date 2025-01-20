@@ -7,10 +7,14 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
-    permissions:
-      actions: write
     steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Call web deploy
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: gh workflow run --repo ${{ github.repository_owner }}/check-phat-nguoi.github.io deploy.yml
