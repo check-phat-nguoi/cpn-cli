@@ -1,4 +1,4 @@
-name: Call web deploy
+name: Call web deploy test
 
 on:
   workflow_call:
@@ -20,3 +20,7 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: gh workflow run --repo ${{ github.repository_owner }}/check-phat-nguoi.github.io deploy.yml
+
+  test:
+    uses: check-phat-nguoi/check-phat-nguoi.github.io/.github/workflows/call-web-deploy.yml@main
+    secrets: inherit

@@ -92,4 +92,7 @@ jobs:
         # with:
         #   password: ${{ secrets.PYPI_TOKEN }}
 
-      - uses: ./.github/workflows/call-web-deploy.yml
+  call-web-deploy:
+    needs: publish-pypi
+    uses: check-phat-nguoi/check-phat-nguoi.github.io/.github/workflows/call-web-deploy.yml@main
+    secrets: inherit
