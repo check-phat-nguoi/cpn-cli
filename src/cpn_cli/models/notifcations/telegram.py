@@ -1,6 +1,4 @@
-from cpn_core.notifications.models.telegram import (
-    TelegramNotificationEngineConfig,
-)
+from cpn_core.models.notifications.telegram import TelegramConfig
 from pydantic import ConfigDict
 
 from cpn_cli.models.notifcations.base import BaseNotificationConfig
@@ -12,4 +10,4 @@ class TelegramNotificationConfig(BaseNotificationConfig):
         frozen=True,
     )
 
-    telegram: TelegramNotificationEngineConfig
+    telegram: TelegramConfig

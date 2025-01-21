@@ -3,8 +3,8 @@ from functools import cache
 from logging import getLogger
 
 from cpn_core.models.plate_detail import PlateDetail
-from cpn_core.notifications.engines.discord import DiscordNotificationEngine
-from cpn_core.notifications.engines.telegram import TelegramNotificationEngine
+from cpn_core.notifications.discord import DiscordEngine
+from cpn_core.notifications.telegram import TelegramEngine
 
 from cpn_cli.models.notifcations.base import BaseNotificationConfig
 from cpn_cli.models.notifcations.discord import DiscordNotificationConfig
@@ -17,8 +17,8 @@ logger = getLogger(__name__)
 class Notify:
     def __init__(self, plate_details: tuple[PlateDetail, ...]) -> None:
         self._plate_details: tuple[PlateDetail, ...] = plate_details
-        self._telegram_engine: TelegramNotificationEngine
-        self._discord_engine: DiscordNotificationEngine
+        self._telegram_engine: TelegramEngine
+        self._discord_engine: DiscordEngine
 
     @cache
     def _get_messages_groups(self, markdown: bool) -> tuple[tuple[str, ...], ...]:
@@ -58,10 +58,10 @@ class Notify:
             logger.debug("No notification was given. Skip notifying")
             return
         async with (
-            TelegramNotificationEngine(
-                timeout=config.request_timeout
+            TelegramEngine(
+                timeout=config.request_timeout,
             ) as self._telegram_engine,
-            DiscordNotificationEngine() as self._discord_engine,
+            DiscordEngine() as self._discord_engine,
         ):
             if config.asynchronous:
                 await gather(

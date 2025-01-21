@@ -1,11 +1,11 @@
 from asyncio import Lock, gather
 from logging import getLogger
 
-from cpn_core.get_data.engines.base import BaseGetDataEngine
-from cpn_core.get_data.engines.check_phat_nguoi import CheckPhatNguoiEngine
-from cpn_core.get_data.engines.csgt import CsgtEngine
-from cpn_core.get_data.engines.phat_nguoi import PhatNguoiEngine
-from cpn_core.get_data.engines.zm_io import ZmioEngine
+from cpn_core.get_data.base import BaseGetDataEngine
+from cpn_core.get_data.check_phat_nguoi import CheckPhatNguoiEngine
+from cpn_core.get_data.csgt import CsgtEngine
+from cpn_core.get_data.phat_nguoi import PhatNguoiEngine
+from cpn_core.get_data.zm_io import ZmioEngine
 from cpn_core.models.plate_detail import PlateDetail
 from cpn_core.models.plate_info import PlateInfo
 from cpn_core.models.violation_detail import ViolationDetail
