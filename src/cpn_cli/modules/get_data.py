@@ -38,12 +38,14 @@ class GetData:
                     engine = self._phatnguoi_engine
                 case ApiEnum.zm_io_vn:
                     engine = self._zmio_engine
+
             logger.info(
                 "Plate %s: Getting data with API: %s...", plate_info.plate, api.value
             )
             violations: tuple[ViolationDetail, ...] | None = await engine.get_data(
                 plate_info
             )
+
             if violations is None:
                 logger.info(
                     "Plate %s: Failed to get data with API: %s",
@@ -56,20 +58,18 @@ class GetData:
                 plate_info.plate,
                 api.value,
             )
-            async with self._lock:
-                self._plate_details.add(
-                    PlateDetail(
-                        plate_info=plate_info,
-                        violations=tuple(
-                            violation
-                            for violation in violations
-                            if not violation.status
-                        )
-                        if config.pending_fines_only
-                        else violations,
-                    )
+            plate_detail: PlateDetail = PlateDetail(
+                plate_info=plate_info,
+                violations=tuple(
+                    violation for violation in violations if not violation.status
                 )
+                if config.pending_fines_only
+                else violations,
+            )
+            async with self._lock:
+                self._plate_details.add(plate_detail)
             return
+
         logger.error(
             "Plate %s: Failed to get data!!!",
             plate_info.plate,
