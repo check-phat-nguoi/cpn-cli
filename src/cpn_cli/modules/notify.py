@@ -51,7 +51,7 @@ class Notify:
                 logger.error("Unknown notification config!")
                 return
         except Exception as e:
-            logger.error(f"Failed to sent notification. {e}")
+            logger.error("Failed to sent notification. %s", e)
 
     async def send(self) -> None:
         if not config.notifications:

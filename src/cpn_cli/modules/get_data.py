@@ -25,7 +25,6 @@ class GetData:
         self._plate_details: set[PlateDetail] = set()
 
     async def _get_data_for_plate(self, plate_info: PlateInfo) -> None:
-        # NOTE: The config has constraint that config.api will be at least 1 api in tuple
         apis: tuple[ApiEnum, ...] = plate_info.apis if plate_info.apis else config.apis
         engine: BaseGetDataEngine
         for api in apis:
@@ -39,18 +38,22 @@ class GetData:
                 case ApiEnum.zm_io_vn:
                     engine = self._zmio_engine
             logger.info(
-                f"Plate {plate_info.plate}: Getting data with API: {api.value}..."
+                "Plate %s: Getting data with API: %s...", plate_info.plate, api.value
             )
             violations: tuple[ViolationDetail, ...] | None = await engine.get_data(
                 plate_info
             )
             if violations is None:
                 logger.info(
-                    f"Plate {plate_info.plate}: Failed to get data with API: {api.value}"
+                    "Plate %s: Failed to get data with API: %s",
+                    plate_info.plate,
+                    api.value,
                 )
                 continue
             logger.info(
-                f"Plate {plate_info.plate}: Successfully got data with API: {api.value}"
+                "Plate %s: Successfully got data with API: %s",
+                plate_info.plate,
+                api.value,
             )
             self._plate_details.add(
                 PlateDetail(
@@ -63,7 +66,10 @@ class GetData:
                 )
             )
             return
-        logger.error(f"Plate {plate_info.plate}: Failed to get data!!!")
+        logger.error(
+            "Plate %s: Failed to get data!!!",
+            plate_info.plate,
+        )
 
     async def get_data(self) -> tuple[PlateDetail, ...]:
         async with (
