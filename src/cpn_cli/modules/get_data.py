@@ -91,12 +91,12 @@ class GetData:
                 await gather(
                     *(
                         self._get_data_for_plate(plate_info)
-                        for plate_info in config.plates_infos
+                        for plate_info in config.plate_infos
                         if plate_info.enabled
                     )
                 )
             else:
-                for plate_info in config.plates_infos:
+                for plate_info in config.plate_infos:
                     if plate_info.enabled:
                         await self._get_data_for_plate(plate_info)
         return tuple(self._plate_details)

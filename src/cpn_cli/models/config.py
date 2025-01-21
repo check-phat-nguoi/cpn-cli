@@ -16,7 +16,7 @@ class Config(BaseModel):
         frozen=True,
     )
 
-    plates_infos: tuple[PlateInfo, ...] = Field(
+    plate_infos: tuple[PlateInfo, ...] = Field(
         title="Danh sách biển xe",
         description="Danh sách các biển xe",
         min_length=1,
