@@ -2,10 +2,10 @@ from asyncio import gather
 from logging import getLogger
 
 from cpn_core.get_data.engines.base import BaseGetDataEngine
-from cpn_core.get_data.engines.check_phat_nguoi import CheckPhatNguoiGetDataEngine
-from cpn_core.get_data.engines.csgt import CsgtGetDataEngine
-from cpn_core.get_data.engines.phat_nguoi import PhatNguoiGetDataEngine
-from cpn_core.get_data.engines.zm_io import ZMIOGetDataEngine
+from cpn_core.get_data.engines.check_phat_nguoi import CheckPhatNguoiEngine
+from cpn_core.get_data.engines.csgt import CsgtEngine
+from cpn_core.get_data.engines.phat_nguoi import PhatNguoiEngine
+from cpn_core.get_data.engines.zm_io import ZmioEngine
 from cpn_core.models.plate_detail import PlateDetail
 from cpn_core.models.plate_info import PlateInfo
 from cpn_core.models.violation_detail import ViolationDetail
@@ -18,10 +18,10 @@ logger = getLogger(__name__)
 
 class GetData:
     def __init__(self) -> None:
-        self._checkphatnguoi_engine: CheckPhatNguoiGetDataEngine
-        self._csgt_engine: CsgtGetDataEngine
-        self._phatnguoi_engine: PhatNguoiGetDataEngine
-        self._zmio_engine: ZMIOGetDataEngine
+        self._checkphatnguoi_engine: CheckPhatNguoiEngine
+        self._csgt_engine: CsgtEngine
+        self._phatnguoi_engine: PhatNguoiEngine
+        self._zmio_engine: ZmioEngine
         self._plate_details: set[PlateDetail] = set()
 
     async def _get_data_for_plate(self, plate_info: PlateInfo) -> None:
@@ -46,11 +46,11 @@ class GetData:
             )
             if violations is None:
                 logger.info(
-                    f"Plate {plate_info.plate}: Failed to get data with API: {api.value}..."
+                    f"Plate {plate_info.plate}: Failed to get data with API: {api.value}"
                 )
                 continue
             logger.info(
-                f"Plate {plate_info.plate}: Sucessfully got data with API: {api.value}..."
+                f"Plate {plate_info.plate}: Successfully got data with API: {api.value}"
             )
             self._plate_details.add(
                 PlateDetail(
@@ -67,17 +67,17 @@ class GetData:
 
     async def get_data(self) -> tuple[PlateDetail, ...]:
         async with (
-            CheckPhatNguoiGetDataEngine(
+            CheckPhatNguoiEngine(
                 timeout=config.request_timeout,
             ) as self._checkphatnguoi_engine,
-            CsgtGetDataEngine(
+            CsgtEngine(
                 timeout=config.request_timeout,
                 retry_captcha=config.apis_settings.retry_resolve_captcha,
             ) as self._csgt_engine,
-            PhatNguoiGetDataEngine(
+            PhatNguoiEngine(
                 timeout=config.request_timeout,
             ) as self._phatnguoi_engine,
-            ZMIOGetDataEngine(
+            ZmioEngine(
                 timeout=config.request_timeout,
             ) as self._zmio_engine,
         ):
