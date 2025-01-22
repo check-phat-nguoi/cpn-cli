@@ -1,4 +1,4 @@
-from asyncio import Lock, gather
+from asyncio import gather
 from logging import getLogger
 
 from cpn_core.get_data.base import BaseGetDataEngine
@@ -23,7 +23,6 @@ class GetData:
         self._phatnguoi_engine: PhatNguoiEngine
         self._zmio_engine: ZmioEngine
         self._plate_details: set[PlateDetail] = set()
-        self._lock: Lock = Lock()
 
     async def _get_data_for_plate(self, plate_info: PlateInfo) -> None:
         apis: tuple[ApiEnum, ...] = plate_info.apis if plate_info.apis else config.apis
@@ -66,8 +65,8 @@ class GetData:
                 if config.pending_fines_only
                 else violations,
             )
-            async with self._lock:
-                self._plate_details.add(plate_detail)
+            # NOTE: Maybe this will never get race condition while inserting to set
+            self._plate_details.add(plate_detail)
             return
 
         logger.error(
