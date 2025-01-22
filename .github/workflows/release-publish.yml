@@ -89,7 +89,7 @@ jobs:
 
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        # with:
-        #   password: ${{ secrets.PYPI_TOKEN }}
 
-      - uses: check-phat-nguoi/check-phat-nguoi.github.io/.github/workflows/call-web-deploy.yml@main
+  call-web-deploy:
+    needs: publish-pypi
+    uses: check-phat-nguoi/check-phat-nguoi.github.io/.github/workflows/call-web-deploy.yml@main
