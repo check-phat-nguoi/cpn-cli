@@ -34,10 +34,8 @@ jobs:
       - name: Install suitable cpn-core
         shell: bash
         run: |
-          if ${{ startsWith(github.ref, 'refs/tags/v') }}; then
-            uv add --upgrade cpn-core
-          else
-            uv add --upgrade cpn-core 'git+https://github.com/${{ github.repository_owner }}/cpn-cli'
+          if ${{ !startsWith(github.ref, 'refs/tags/v') }}; then
+            uv add --upgrade cpn-core 'git+https://github.com/${{ github.repository_owner }}/cpn-core'
           fi
 
       - uses: jakebailey/pyright-action@v2
