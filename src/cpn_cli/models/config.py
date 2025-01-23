@@ -62,10 +62,15 @@ class Config(BaseModel):
         description="Thời gian (s) để gửi request đến server API và gửi notify message",
         default=20,
     )
-    asynchronous: bool = Field(
-        title="Gửi và chờ tất cả request",
-        description="Gửi và chờ tất cả request. Đối với API csgt.vn hãy tắt vì gửi request quá nhiều, trang lỗi. Nếu bật, các request sẽ không đảm bảo thứ tự input. Notify hiện không đảm bảo thứ tự input.",
-        default=True,
+    get_data_per_time: int = Field(
+        title="Gửi và chờ số lượng requests trong một lần(Ở get_data)",
+        description="Gửi và chờ số lượng requests trong một lần. Đối với API csgt.vn hãy tắt vì gửi request quá nhiều, trang lỗi. Nếu bật, các request sẽ không đảm bảo thứ tự input. Notify hiện không đảm bảo thứ tự input.",
+        default=5,
+    )
+    send_notification_per_time: int = Field(
+        title="Gửi và chờ số lượng requests trong một lần(Ở send_notification)",
+        description="Gửi và chờ số lượng requests trong một lần. Đối với API csgt.vn hãy tắt vì gửi request quá nhiều, trang lỗi. Nếu bật, các request sẽ không đảm bảo thứ tự input. Notify hiện không đảm bảo thứ tự input.",
+        default=5,
     )
     detail_log: bool = Field(
         title="Log chi tiết",

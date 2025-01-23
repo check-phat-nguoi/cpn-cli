@@ -1,4 +1,7 @@
-from asyncio import gather
+import asyncio
+from asyncio import gather, get_running_loop
+from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import wait as FutureWait
 from logging import getLogger
 
 from cpn_core.get_data.base import BaseGetDataEngine
@@ -74,6 +77,12 @@ class GetData:
             plate_info.plate,
         )
 
+    def _safe_thread_work(self, plate_info: PlateInfo, loop):
+        future = asyncio.run_coroutine_threadsafe(
+            self._get_data_for_plate(plate_info), loop
+        )
+        FutureWait([future])
+
     async def get_data(self) -> tuple[PlateDetail, ...]:
         async with (
             CheckPhatNguoiEngine(
@@ -90,16 +99,16 @@ class GetData:
                 timeout=config.request_timeout,
             ) as self._zmio_engine,
         ):
-            if config.asynchronous:
+            loop = get_running_loop()
+            with ThreadPoolExecutor(max_workers=config.get_data_per_time) as executor:
                 await gather(
                     *(
-                        self._get_data_for_plate(plate_info)
+                        loop.run_in_executor(
+                            executor, self._safe_thread_work, plate_info, loop
+                        )
                         for plate_info in config.plate_infos
                         if plate_info.enabled
                     )
                 )
-            else:
-                for plate_info in config.plate_infos:
-                    if plate_info.enabled:
-                        await self._get_data_for_plate(plate_info)
+
         return tuple(self._plate_details)
