@@ -100,7 +100,7 @@ class GetData:
             ) as self._zmio_engine,
         ):
             loop = get_running_loop()
-            with ThreadPoolExecutor(max_workers=config.get_data_per_time) as executor:
+            with ThreadPoolExecutor(max_workers=config.requests_per_time) as executor:
                 await gather(
                     *(
                         loop.run_in_executor(
