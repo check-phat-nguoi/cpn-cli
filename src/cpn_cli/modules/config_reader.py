@@ -1,5 +1,6 @@
 from json import load
 from os.path import exists as path_exists
+from os.path import expanduser as expand_user_path
 from typing import Final
 
 from pydantic import ValidationError
@@ -28,6 +29,7 @@ def _config_reader() -> Config:
             exit(1)
 
     for config_path in CONFIG_PATHS:
+        config_path = expand_user_path(config_path)
         if path_exists(config_path):
             return read_config(config_path)
 
