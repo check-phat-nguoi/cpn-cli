@@ -1,4 +1,5 @@
 from asyncio import gather
+from contextlib import nullcontext
 from logging import getLogger
 
 from cpn_core.get_data.base import BaseGetDataEngine
@@ -19,11 +20,28 @@ logger = getLogger(__name__)
 
 class GetData:
     def __init__(self) -> None:
-        self._checkphatnguoi_engine: CheckPhatNguoiEngine
-        self._csgt_engine: CsgtEngine
-        self._phatnguoi_engine: PhatNguoiEngine
-        self._zmio_engine: ZmioEngine
-        self._etraffic_engine: EtrafficEngine
+        self._checkphatnguoi_engine: CheckPhatNguoiEngine = CheckPhatNguoiEngine(
+            timeout=config.request_timeout,
+        )
+        self._csgt_engine: CsgtEngine = CsgtEngine(
+            timeout=config.request_timeout,
+            retry_captcha=config.apis_settings.retry_resolve_captcha,
+        )
+        self._phatnguoi_engine: PhatNguoiEngine = PhatNguoiEngine(
+            timeout=config.request_timeout,
+        )
+        self._zmio_engine: ZmioEngine = ZmioEngine(
+            timeout=config.request_timeout,
+        )
+        self._etraffic_engine: EtrafficEngine | None = (
+            EtrafficEngine(
+                citizen_indentify=config.apis_settings.etraffic.citizen_id,
+                password=config.apis_settings.etraffic.password,
+                timeout=config.request_timeout,
+            )
+            if config.apis_settings.etraffic is not None
+            else None
+        )
         self._plate_details: set[PlateDetail] = set()
 
     async def _get_data_for_plate(self, plate_info: PlateInfo) -> None:
@@ -40,7 +58,15 @@ class GetData:
                 case ApiEnum.zm_io_vn:
                     engine = self._zmio_engine
                 case ApiEnum.etraffic_gtelict_vn:
-                    engine = self._etraffic_engine
+                    if self._etraffic_engine is not None:
+                        engine = self._etraffic_engine
+                    else:
+                        logger.error(
+                            "Plate %s - %s: You haven't given citizen ID and password!",
+                            plate_info.plate,
+                            ApiEnum.etraffic_gtelict_vn,
+                        )
+                        return
 
             logger.info(
                 "Plate %s: Getting data with API: %s...", plate_info.plate, api.value
@@ -80,19 +106,13 @@ class GetData:
 
     async def get_data(self) -> tuple[PlateDetail, ...]:
         async with (
-            CheckPhatNguoiEngine(
-                timeout=config.request_timeout,
-            ) as self._checkphatnguoi_engine,
-            CsgtEngine(
-                timeout=config.request_timeout,
-                retry_captcha=config.apis_settings.retry_resolve_captcha,
-            ) as self._csgt_engine,
-            PhatNguoiEngine(
-                timeout=config.request_timeout,
-            ) as self._phatnguoi_engine,
-            ZmioEngine(
-                timeout=config.request_timeout,
-            ) as self._zmio_engine,
+            self._checkphatnguoi_engine,
+            self._csgt_engine,
+            self._phatnguoi_engine,
+            self._zmio_engine,
+            self._etraffic_engine
+            if self._etraffic_engine is not None
+            else nullcontext(),
         ):
             if config.asynchronous:
                 await gather(
