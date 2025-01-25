@@ -4,6 +4,7 @@ from logging import getLogger
 from cpn_core.get_data.base import BaseGetDataEngine
 from cpn_core.get_data.check_phat_nguoi import CheckPhatNguoiEngine
 from cpn_core.get_data.csgt import CsgtEngine
+from cpn_core.get_data.etraffic import EtrafficEngine
 from cpn_core.get_data.phat_nguoi import PhatNguoiEngine
 from cpn_core.get_data.zm_io import ZmioEngine
 from cpn_core.models.plate_detail import PlateDetail
@@ -22,6 +23,7 @@ class GetData:
         self._csgt_engine: CsgtEngine
         self._phatnguoi_engine: PhatNguoiEngine
         self._zmio_engine: ZmioEngine
+        self._etraffic_engine: EtrafficEngine
         self._plate_details: set[PlateDetail] = set()
 
     async def _get_data_for_plate(self, plate_info: PlateInfo) -> None:
@@ -37,6 +39,8 @@ class GetData:
                     engine = self._phatnguoi_engine
                 case ApiEnum.zm_io_vn:
                     engine = self._zmio_engine
+                case ApiEnum.etraffic_gtelict_vn:
+                    engine = self._etraffic_engine
 
             logger.info(
                 "Plate %s: Getting data with API: %s...", plate_info.plate, api.value
