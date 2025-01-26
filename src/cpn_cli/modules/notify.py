@@ -1,4 +1,7 @@
-from asyncio import gather
+import asyncio
+from asyncio import gather, get_running_loop
+from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import wait as FutureWait
 from functools import cache
 from logging import getLogger
 
@@ -53,6 +56,12 @@ class Notify:
         except Exception as e:
             logger.error("Failed to sent notification. %s", e)
 
+    def _safe_thread_work(self, notification: BaseNotificationConfig, loop):
+        future = asyncio.run_coroutine_threadsafe(
+            self._send_messages(notification), loop
+        )
+        FutureWait([future])
+
     async def send(self) -> None:
         if not config.notifications:
             logger.debug("No notification was given. Skip notifying")
@@ -63,15 +72,16 @@ class Notify:
             ) as self._telegram_engine,
             DiscordEngine() as self._discord_engine,
         ):
-            if config.asynchronous:
+            loop = get_running_loop()
+            with ThreadPoolExecutor(
+                max_workers=config.send_notification_per_time
+            ) as executor:
                 await gather(
                     *(
-                        self._send_messages(notification)
+                        loop.run_in_executor(
+                            executor, self._safe_thread_work, notification, loop
+                        )
                         for notification in config.notifications
                         if notification.enabled
                     )
                 )
-            else:
-                for notification in config.notifications:
-                    if notification.enabled:
-                        await self._send_messages(notification)
