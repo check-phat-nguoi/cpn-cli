@@ -12,7 +12,7 @@ maintainers = [
 description = "cpn cli"
 name = "cpn-cli"
 requires-python = ">=3.13"
-dependencies = ["cpn-core[discord,ocr]==0.5.0"]
+dependencies = ["cpn-core[discord,ocr,curl]==0.5.0"]
 version = "0.5.0"
 
 [project.scripts]
